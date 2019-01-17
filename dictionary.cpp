@@ -21,7 +21,7 @@ struct NodeImplementation {
 
 struct DictionaryImplementation {
   int size;
-  Node current;
+  Node current; //Changed from bool to an Node
   Node head;
   Node tail;
 };
@@ -31,7 +31,7 @@ Dictionary new_dictionary() {
   new_dictionary->size = 0;
   new_dictionary->head = 0;
   new_dictionary->tail = 0;
-  new_dictionary->current = 0;
+  new_dictionary->current = 0; //Initialized current Node
 
   return new_dictionary;
 }
@@ -92,17 +92,17 @@ bool is_in_dict (Dictionary dict, const char *word) {
 }
 
 void start_iterating (Dictionary dict) {
-  dict->current = dict->head;
+  dict->current = dict->head;		//Changed the iterating process because of the change from bool to Node
 }
 
 bool has_next (Dictionary dict) {
-  return dict->current != 0;
+  return dict->current != 0;		//Removed the if because of the changes on top
 }
 
 const char* get_next_entry (Dictionary dict) {
-  if (has_next(dict)) {
-    const char* string = dict->current->word;
-    dict->current = dict->current->next;
+  if (has_next(dict)) { 						//Removed the if because of the changes on top
+    const char* string = dict->current->word; 	//Changed head to current
+    dict->current = dict->current->next;		//Changed head to current
     return string;
   }
   return 0;
@@ -114,12 +114,12 @@ void insert_sorted (Dictionary dict, const char *word) {
     toAdd->word = word;
     toAdd->next = 0;
     if (dict->head != 0) {
-      if (dict->tail == 0) {
-        if (strcmp(word, dict->head->word) > 0) {
+      if (dict->tail == 0) {		//Removed an statement
+        if (strcmp(word, dict->head->word) > 0) {	//Added an if with the statement from the top if
           dict->tail = toAdd;
           dict->head->next = dict->tail;
         }
-        else {
+        else {										//Added an else for the case that strcmp is < 0
           Node temp = dict->head;
           dict->head = toAdd;
           dict->tail = temp;
@@ -127,7 +127,7 @@ void insert_sorted (Dictionary dict, const char *word) {
         }
         dict->size++;
       }
-      else if(strcasecmp(word, dict->head->word) < 0){
+      else if(strcasecmp(word, dict->head->word) < 0){	//if the word is lower than the first
         toAdd->next = dict->head;
         dict->head = toAdd;
         dict->size++;
@@ -135,8 +135,8 @@ void insert_sorted (Dictionary dict, const char *word) {
       else {
         bool found = false;
         Node current = dict->head;
-        while (current->next != 0 && !found) {
-          if (strcmp(word, current->next->word) < 0) {
+        while (current->next != 0 && !found) {				//Added next
+          if (strcmp(word, current->next->word) < 0) {		//Added next
             toAdd->next = current->next;
             current->next = toAdd;
             dict->size++;
@@ -144,7 +144,7 @@ void insert_sorted (Dictionary dict, const char *word) {
           }
           current = current->next;
         }
-        if (current->next == 0) {
+        if (current->next == 0) {		//Added an if to add the word to the end of the dict
           dict->tail->next = toAdd;
           dict->tail = toAdd;
           dict->size++;
